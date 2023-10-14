@@ -1,22 +1,34 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-
+#include <ctype.h>
+double x, e;
 double calculateRoot(double x, double k, double e);
-
+double get_x(void);
+double get_k(void);
+double get_e(void);
 int main(void)
 {
+    printf("This program calculates the root of power of a number\n");
 
-    double x, e;
     int k;
 
     while (1)
     {
-        printf("Please, enter a number you want to get a root from: ");
-        scanf("%lf", &x);
+        do
+        {
 
-        printf("Please enter a k-th root: ");
-        scanf("%d", &k);
+            x = get_x();
+        }
+        while (x == -1);
+
+        do
+        {
+
+            k = get_k();
+        }
+        while (k == -1);
+
 
         if ((k > 0) && (k % 2 == 0) && (x < 0))
         {
@@ -57,8 +69,13 @@ int main(void)
 
     while (1)
     {
-        printf("Please, enter a precision: ");
-        scanf("%lf", &e);
+        do
+        {
+
+            e = get_e();
+        }
+        while (e == -1);
+
         printf("\n");
         if (e < 1e-15)
         {
@@ -83,8 +100,7 @@ double calculateRoot(double x, double k, double e)
 
     double delta = 1;
     double y = 1;
-    printf("\tdelta: %f\n", delta);
-    printf("\ty = %f\n", y);
+
 
     if (x == 0 || x == 1)
     {
@@ -115,3 +131,57 @@ double calculateRoot(double x, double k, double e)
 
     return y;
 }
+
+
+double get_x(void){
+    char input[15];
+    printf("Please, enter a number you want to get a root from: ");
+    scanf("%s", input);
+    for (int i = 0; input[i] != '\0'; i++)
+    {
+        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
+        {
+            printf("\nYour input is invalid\n");
+            return -1;
+        }
+    }
+    double number = atof(input);
+    return number;
+}
+double get_k(void){
+    char input[15];
+
+    printf("Please enter a k-th root: ");
+    scanf("%s", input);
+    for (int i = 0; input[i] != '\0'; i++)
+    {
+        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
+        {
+            printf("\nYour input is invalid\n");
+            return -1;
+        }
+           
+      
+    }
+    double number = atof(input);
+    return number;
+}
+double get_e(void){
+    char input[15];
+
+
+
+    printf("Please, enter a precision: ");
+    scanf("%s", input);
+    for (int i = 0; input[i] != '\0'; i++)
+    {
+        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
+        {
+            printf("\nYour input is invalid\n");
+            return -1;
+        }
+    }
+    double number = atof(input);
+    return number;
+}
+
