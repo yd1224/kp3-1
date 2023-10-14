@@ -2,32 +2,25 @@
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
 double x, e;
+
 double calculateRoot(double x, double k, double e);
-double get_x(void);
-double get_k(void);
-double get_e(void);
+double getInput(const char *prompt);
+bool isScientificNotation(const char *input);
+
 int main(void)
 {
     printf("This program calculates the root of power of a number\n");
-
     int k;
+   
 
     while (1)
     {
-        do
-        {
-
-            x = get_x();
-        }
-        while (x == -1);
-
-        do
-        {
-
-            k = get_k();
-        }
-        while (k == -1);
+           x = getInput("Enter a number you want to get a root from: ");
+           k = getInput("Enter the k-th root: ");
+           
 
 
         if ((k > 0) && (k % 2 == 0) && (x < 0))
@@ -69,12 +62,7 @@ int main(void)
 
     while (1)
     {
-        do
-        {
-
-            e = get_e();
-        }
-        while (e == -1);
+       e = getInput("Enter precision: ");
 
         printf("\n");
         if (e < 1e-15)
@@ -133,55 +121,48 @@ double calculateRoot(double x, double k, double e)
 }
 
 
-double get_x(void){
+double getInput(const char *prompt) {
     char input[15];
-    printf("Please, enter a number you want to get a root from: ");
-    scanf("%s", input);
-    for (int i = 0; input[i] != '\0'; i++)
-    {
-        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
-        {
-            printf("\nYour input is invalid\n");
-            return -1;
+    double number;
+
+    do {
+        printf("%s", prompt);
+        scanf("%s", input);
+
+        int invalidInput = 0;
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-' && !isScientificNotation(input)) {
+                printf("\nYour input is invalid\n");
+                invalidInput = 1;
+                break;
+            }
         }
-    }
-    double number = atof(input);
+
+        if (!invalidInput) {
+            number = atof(input);
+            break;
+        }
+    } while (1);
+
     return number;
 }
-double get_k(void){
-    char input[15];
+bool isScientificNotation(const char *input) {
+    int len = strlen(input);
+    int eCount = 0;  
+    int digitsBeforeE = 0;
+    int digitsAfterE = 0;
 
-    printf("Please enter a k-th root: ");
-    scanf("%s", input);
-    for (int i = 0; input[i] != '\0'; i++)
-    {
-        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
-        {
-            printf("\nYour input is invalid\n");
-            return -1;
-        }
-           
-      
-    }
-    double number = atof(input);
-    return number;
-}
-double get_e(void){
-    char input[15];
-
-
-
-    printf("Please, enter a precision: ");
-    scanf("%s", input);
-    for (int i = 0; input[i] != '\0'; i++)
-    {
-        if (isdigit(input[i]) == 0 && input[i] != '.' && input[i] != '-')
-        {
-            printf("\nYour input is invalid\n");
-            return -1;
+    for (int i = 0; i < len; i++) {
+        char c = input[i];
+        if (c == 'e' || c == 'E') {
+            eCount++;
+        } else if (isdigit(c) && eCount == 0) {
+            digitsBeforeE++;
+        } else if (isdigit(c) && eCount == 1) {
+            digitsAfterE++;
         }
     }
-    double number = atof(input);
-    return number;
-}
 
+
+    return (eCount == 1) && (digitsBeforeE > 0) && (digitsAfterE > 0);
+}
