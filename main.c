@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
-double x, e;
+
 
 double calculateRoot(double x, double k, double e);
 double getInput(const char *prompt);
@@ -12,6 +12,7 @@ bool isScientificNotation(const char *input);
 
 int main(void)
 {
+    double x, e;
     printf("This program calculates the root of power of a number\n");
     int k;
    
